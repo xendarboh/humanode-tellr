@@ -1,0 +1,58 @@
+version: '3.9'
+
+services:
+  hmnd-tellr:
+    image: ${IMG_REPO}/${IMG_NAME}:${IMG_TAG}
+    build:
+      context: ./
+    init: true
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - AUTH
+      - NODE_ENV
+      - PORT
+      - RPC_URL
+      - VIRTUAL_HOST=${HOSTNAME}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - LETSENCRYPT_HOST=${HOSTNAME}
+    ports:
+      - ${PORT}:${PORT}
+
+  nginx-proxy:
+    profiles: ['proxy']
+    container_name: nginx-proxy
+    image: nginxproxy/nginx-proxy:alpine
+    init: true
+    restart: unless-stopped
+    network_mode: bridge
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ${HOST_DIR}/nginx/certs:/etc/nginx/certs:ro
+      - ${HOST_DIR}/nginx/dhparam:/etc/nginx/dhparam
+      - ${HOST_DIR}/nginx/html:/usr/share/nginx/html
+      - ${HOST_DIR}/nginx/vhost.d:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      # - ./conf.d/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+    environment:
+      - ENABLE_IPV6=true
+      - RESOLVERS=1.1.1.1
+
+  nginx-proxy-acme:
+    profiles: ['proxy']
+    container_name: nginx-proxy-acme
+    image: nginxproxy/acme-companion
+    restart: unless-stopped
+    network_mode: bridge
+    volumes:
+      - ${HOST_DIR}/nginx/acme.sh:/etc/acme.sh:rw
+      - ${HOST_DIR}/nginx/certs:/etc/nginx/certs:rw
+      - ${HOST_DIR}/nginx/dhparam:/etc/nginx/dhparam
+      - ${HOST_DIR}/nginx/html:/usr/share/nginx/html
+      - ${HOST_DIR}/nginx/vhost.d:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - ./conf.d/my_proxy.conf:/etc/nginx/conf.d/my_proxy.conf:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
