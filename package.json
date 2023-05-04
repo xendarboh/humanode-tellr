@@ -1,0 +1,14 @@
+{
+  "name": "humanode-tellr",
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "humanode-peer status reporter",
+  "scripts": {
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
