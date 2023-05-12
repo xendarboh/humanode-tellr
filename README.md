@@ -19,11 +19,10 @@ cp .env-example .env
 
 ## Run
 
-### with Nodejs directly
+### with Node.js directly
 
 ```sh
 npm install
-source .env
 npm run start
 ```
 

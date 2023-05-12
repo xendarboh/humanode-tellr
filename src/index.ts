@@ -1,6 +1,10 @@
 import Koa from 'koa';
 import Router from '@koa/router';
 import cors from '@koa/cors';
+import * as dotenv from 'dotenv';
+
+// source environment from .env file, if present
+dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const AUTH = process.env.AUTH || 'TODO'; // no colons!
@@ -59,3 +63,8 @@ router.get(`/${AUTH}/status`, async (ctx) => {
 app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(PORT);
+
+console.log(
+  `listening on port ${PORT}`,
+  `monitoring humanode-peer @ ${RPC_URL}`
+);
