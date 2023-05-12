@@ -53,11 +53,27 @@ const getBioauthStatus = async () => {
 
 // return bioauth status result as requested
 // or error upon failure
-router.get(`/${AUTH}/status`, async (ctx) => {
+router.get(`/${AUTH}/status/:expire?`, async (ctx) => {
   const s = await getBioauthStatus();
   if (!s.result) ctx.throw(500, 'bioauth_status result not found');
-  ctx.body = s.result;
+
+  // if expire param is given, check if bioauth expires within the given time
+  if (ctx.params.expire) {
+    try {
+      const {
+        Active: { expires_at },
+      } = s.result;
+      const t = (expires_at - Date.now()) / 1000 / 60; // minutes remaining
+      ctx.body = t <= Number(ctx.params.expire) ? 'Expiring' : s.result;
+    } catch {
+      // if status is "Inactive" (or other error parsing data), pass through results
+      ctx.body = s.result;
+    }
+  } else {
+    ctx.body = s.result;
+  }
   console.log(`[${ctx.status}] /{AUTH}/status`, JSON.stringify(ctx.body));
+  console.log();
 });
 
 app.use(router.routes()).use(router.allowedMethods());
