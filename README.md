@@ -67,3 +67,11 @@ appending minutes to the URL. For example, to report if bioauth expires within
 #### Example: UptimeRobot
 
 ![image](https://user-images.githubusercontent.com/1435589/236365721-60161603-c0df-4659-bc00-6450f125a46a.png)
+
+## Tips
+
+If you find this tool useful, please consider sharing some `$HMND`. Thanks! 🚀
+
+```txt
+hmsWHFeUoJqCALP1q5WNq94Pr2KcY6K439NwN3S4vcHWL6NmV
+```
