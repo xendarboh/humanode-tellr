@@ -35,6 +35,16 @@ docker compose build
 docker compose up
 ```
 
+# GitHub CI Workflow
+
+This project uses GitHub CI workflow for automatic Docker image building and pushing to Docker Hub. The workflow is triggered on every push to the main branch and on every new published release.
+
+To use this workflow, you need to have your Docker Hub username and token stored in your GitHub repository secrets. These secrets should be named DOCKERHUB_USERNAME and DOCKERHUB_TOKEN respectively.
+
+To set these secrets, go to the "Settings" tab of your repository, select "Secrets" from the left sidebar, and click on "New repository secret".
+
+Once these secrets are set, every time you push to the main branch, GitHub Actions will build a new Docker image and push it to your Docker Hub repository.
+
 ## Usage
 
 Access the status report by URL. Use `AUTH` as set in `.env` within the URL.
